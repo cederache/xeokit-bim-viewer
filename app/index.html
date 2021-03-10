@@ -10,26 +10,24 @@
 
     <!-- BIMViewer styles -->
     <link rel="stylesheet" href="./lib/fontawesome-free-5.11.2-web/css/all.min.css" type="text/css"/>
-    <link rel="stylesheet" href="../css/BIMViewer.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/BIMViewer.css" type="text/css"/>
 
     <!-- App style -->
     <link rel="stylesheet" href="./css/style.css"/>
 
     <!-- App tooltips style -->
     <link rel="stylesheet" href="./lib/backdrop.css"/>
-
 </head>
 
 <body>
-
-<div id="myViewer" class="xeokit-busy-modal-backdrop">
-    <div id="myExplorer" class="active"></div>
-    <div id="myContent">
-        <div id="myToolbar"></div>
-        <canvas id="myCanvas"></canvas>
+    <div id="myViewer" class="xeokit-busy-modal-backdrop">
+        <div id="myExplorer" class="active"></div>
+        <div id="myContent">
+            <div id="myToolbar"></div>
+            <canvas id="myCanvas"></canvas>
+        </div>
     </div>
-</div>
-<canvas id="myNavCubeCanvas"></canvas>
+    <canvas id="myNavCubeCanvas"></canvas>
 </body>
 
 <!-- App tooltips libraries-->
@@ -37,9 +35,7 @@
 <script src="./lib/tippy.js"></script>
 
 <script type="module">
-
     // Set up application
-
     import {Server, BIMViewer} from "../dist/main.js";
 
     window.onload = function () {
@@ -49,6 +45,7 @@
         // Project to load into the viewer
         const projectId = requestParams.projectId;
         if (!projectId) {
+            console.error("No project id specified in query param");
             return;
         }
 
@@ -116,13 +113,11 @@
 
         // Load a project
         bimViewer.loadProject(projectId, () => {
-
                 // The project may load one or models initially.
 
-                // Withe request params, we can also specify:
+                // With request params, we can also specify:
                 //  - models to load
-                // - explorer tab to open
-
+                //  - explorer tab to open
 
                 const modelId = requestParams.modelId;
                 if (modelId) {
@@ -134,7 +129,6 @@
                     bimViewer.openTab(tab);
                 }
 
-                //
                 window.setInterval((function () {
                     var lastHash = "";
                     return function () {
@@ -237,8 +231,5 @@
         window.bimViewer = bimViewer; // For debugging
     };
 
-
-
 </script>
-
 </html>

@@ -373,4 +373,4 @@ class ModelsExplorer extends Controller {
     }
 }
 
-export {ModelsExplorer};
+export { ModelsExplorer };
