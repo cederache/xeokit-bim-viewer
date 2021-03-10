@@ -1,9 +1,9 @@
-import {Controller} from "../Controller.js";
-import {XKTLoaderPlugin} from "@xeokit/xeokit-sdk/src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
-import {math} from "@xeokit/xeokit-sdk/src/viewer/scene/math/math.js";
-import {ModelIFCObjectColors} from "../IFCObjectDefaults/ModelIFCObjectColors.js";
-import {ViewerIFCObjectColors} from "../IFCObjectDefaults/ViewerIFCObjectColors.js";
-import {ModelsContextMenu} from "../contextMenus/ModelsContextMenu.js";
+import { GLTFLoaderPlugin } from "@xeokit/xeokit-sdk/src/plugins/GLTFLoaderPlugin/GLTFLoaderPlugin.js";
+import { math } from "@xeokit/xeokit-sdk/src/viewer/scene/math/math.js";
+import { ModelsContextMenu } from "../contextMenus/ModelsContextMenu.js";
+import { Controller } from "../Controller.js";
+import { ModelIFCObjectColors } from "../IFCObjectDefaults/ModelIFCObjectColors.js";
+import { ViewerIFCObjectColors } from "../IFCObjectDefaults/ViewerIFCObjectColors.js";
 
 const tempVec3 = math.vec3();
 
@@ -38,7 +38,7 @@ class ModelsExplorer extends Controller {
             throw "Missing DOM element: ,xeokit-tab-btn";
         }
 
-        this._xktLoader = new XKTLoaderPlugin(this.viewer, {
+        this._xktLoader = new GLTFLoaderPlugin(this.viewer, {
             objectDefaults: ModelIFCObjectColors
         });
 
@@ -238,14 +238,15 @@ class ModelsExplorer extends Controller {
         this.bimViewer._busyModal.show("Loading: " + modelInfo.name);
         this.server.getMetadata(this._projectId, modelId,
             (json) => {
-                this.server.getGeometry(this._projectId, modelId,
-                    (arraybuffer) => {
+                const geomSrc = this.server.getGeometrySrc(this._projectId, modelId);
+                // this.server.getGeometry(this._projectId, modelId,
+                //     (arraybuffer) => {
                         const objectColorSource = (modelInfo.objectColorSource || this.bimViewer.getObjectColorSource());
                         const objectDefaults = (objectColorSource === "model") ? ModelIFCObjectColors : ViewerIFCObjectColors;
                         const model = this._xktLoader.load({
                             id: modelId,
                             metaModelData: json,
-                            xkt: arraybuffer,
+                            src: geomSrc,
                             objectDefaults: objectDefaults,
                             excludeUnclassifiedObjects: true,
                             position: modelInfo.position,
@@ -285,14 +286,14 @@ class ModelsExplorer extends Controller {
                                 }
                             }
                         });
-                    },
-                    (errMsg) => {
-                        this.bimViewer._busyModal.hide();
-                        this.error(errMsg);
-                        if (error) {
-                            error(errMsg);
-                        }
-                    });
+                    // },
+                    // (errMsg) => {
+                    //     this.bimViewer._busyModal.hide();
+                    //     this.error(errMsg);
+                    //     if (error) {
+                    //         error(errMsg);
+                    //     }
+                    // });
             },
             (errMsg) => {
                 this.bimViewer._busyModal.hide();

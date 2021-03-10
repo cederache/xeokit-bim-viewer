@@ -64,8 +64,18 @@ class Server {
      * @param {Function} error Callback through which an error message is returned on error.
      */
     getGeometry(projectId, modelId, done, error) {
-        const url = this._dataDir + "/projects/" + projectId + "/models/" + modelId + "/geometry.xkt";
+        const url = this._dataDir + "/projects/" + projectId + "/models/" + modelId + "/" + modelId + ".gltf";
         utils.loadArraybuffer(url, done, error);
+    }
+
+    /**
+     * Gets geometry path for a model within a project.
+     *
+     * @param {String} projectId ID of the project.
+     * @param {String} modelId ID of the model.
+     */
+    getGeometrySrc(projectId, modelId) {
+        return this._dataDir + "/projects/" + projectId + "/models/" + modelId + "/" + modelId + ".gltf";
     }
 
     /**
